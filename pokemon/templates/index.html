@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex Explorer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Pokédex Explorer</h1>
+            <p>Busca tu Pokémon favorito por nombre o ID</p>
+        </header>
+
+        <form method="POST" class="search-form">
+            <input type="text" name="search_query" placeholder="Ej. Charizard, 25..." required autocomplete="off">
+            <button type="submit" aria-label="Buscar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </form>
+
+        <div class="extra-buttons">
+            <a href="/random" class="btn-random">🎲 Aleatorio</a>
+            <a href="/type/fire" class="btn-type">🔥 Tipo Fuego</a>
+            <a href="/type/water" class="btn-type">💧 Tipo Agua</a>
+            <a href="/type/electric" class="btn-type">⚡ Tipo Eléctrico</a>
+        </div>
+
+        {% if error %}
+        <div class="error-message animation-fade-in">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if pokemon %}
+        <div class="pokemon-card animation-fade-in" data-type="{{ pokemon.types[0].lower() }}">
+            <div class="card-header">
+                <span class="pokemon-id">#{{ "%03d"|format(pokemon.id) }}</span>
+            </div>
+            <div class="image-container">
+                <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+            </div>
+            <div class="pokemon-info">
+                <h2>{{ pokemon.name }}</h2>
+                <div class="types">
+                    {% for type in pokemon.types %}
+                    <span class="type {{ type.lower() }}">{{ type }}</span>
+                    {% endfor %}
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ pokemon.weight }} kg</span>
+                        <span class="stat-label">Peso</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ pokemon.height }} m</span>
+                        <span class="stat-label">Altura</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
